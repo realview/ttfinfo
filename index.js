@@ -21,17 +21,10 @@ function ttfInfo(data) {
   }
 }
 
-export function  ttfInfoFromPath(path ) {
+export default function ttfInfoFromPath(path ) {
   
   const data =  fs.readFileSync(path);
   const info = ttfInfo(data);
   return data
     
-}
-
-export  function ttfInfoFromData(data) {
-
-      const info = ttfInfo(data);
-      return data
-  
 }
