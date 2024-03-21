@@ -1,11 +1,11 @@
-const fs            = require('fs'),
-      nameTable     = require('./tableName')
-      postTable     = require('./tablePost'),
-      os2Table      = require('./tableOS2');
+import fs from 'fs';
+import nameTable from './tableName';
+import postTable from './tablePost';
+import os2Table from './tableOS2';
 
 function ttfInfo(data) {
   try {
-    var info = {
+    const info = {
       tables: {
         name: nameTable(data),
         post: postTable(data),
@@ -21,17 +21,16 @@ function ttfInfo(data) {
   }
 }
 
-module.exports = function(pathOrData, cb) {
-	var getData = (pathOrData instanceof Buffer) ?
-		function(data, cb) { cb(null, data); } : fs.readFile;
+export default function ttfInfoFromPathOrData(pathOrData, cb) {
+  const getData = (pathOrData instanceof Buffer) ?
+    (data, cb) => cb(null, data) : fs.promises.readFile;
 
-	getData(pathOrData, function(err, data) {
-		if (err) return cb(pathOrData + ' not found.');
-		try {
-			var info = ttfInfo(data);
-			cb(null, info);
-		} catch(err) {
-			cb(err);
-		}
-	});
-};
+  getData(pathOrData)
+    .then(data => {
+      const info = ttfInfo(data);
+      cb(null, info);
+    })
+    .catch(err => {
+      cb(err);
+    });
+}

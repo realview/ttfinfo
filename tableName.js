@@ -1,28 +1,25 @@
+import { offset } from './table';
 
-const table = require('./table');
+export default function getNameInfo(data) {
+  const ntOffset = offset(data, 'name');
+  const offsetStorage = data.readUInt16BE(ntOffset + 4);
+  const numberNameRecords = data.readUInt16BE(ntOffset + 2);
+  const storage = offsetStorage + ntOffset;
 
+  const info = {};
+  for (let j = 0; j < numberNameRecords; j++) {
+    const o = ntOffset + 6 + j * 12;
 
-module.exports = function(data) {
-  var ntOffset = table.offset(data, 'name'),
-      offsetStorage = data.readUInt16BE(ntOffset+4),
-      numberNameRecords = data.readUInt16BE(ntOffset+2);
-
-  var storage = offsetStorage + ntOffset;
-
-  var info = {};
-  for (var j = 0; j < numberNameRecords; j++) {
-    var o = ntOffset + 6 + j*12;
-
-    var platformId = data.readUInt16BE(o),
-      nameId = data.readUInt16BE(o+6),
-      stringLength = data.readUInt16BE(o+8),
-      stringOffset = data.readUInt16BE(o+10);
+    const platformId = data.readUInt16BE(o);
+    const nameId = data.readUInt16BE(o + 6);
+    const stringLength = data.readUInt16BE(o + 8);
+    const stringOffset = data.readUInt16BE(o + 10);
 
     if (!info[nameId]) {
       info[nameId] = '';
 
-      for (var k = 0; k < stringLength; k++) {
-        var charCode = data[storage+stringOffset+k];
+      for (let k = 0; k < stringLength; k++) {
+        const charCode = data[storage + stringOffset + k];
         if (charCode === 0) continue;
         info[nameId] += String.fromCharCode(charCode);
       }
@@ -30,5 +27,4 @@ module.exports = function(data) {
   }
 
   return info;
-};
-
+}
