@@ -21,16 +21,17 @@ function ttfInfo(data) {
   }
 }
 
-export default function ttfInfoFromPathOrData(pathOrData, cb) {
-  const getData = (pathOrData instanceof Buffer) ?
-    (data, cb) => cb(null, data) : fs.promises.readFile;
+export function  ttfInfoFromPath(path ) {
+  
+  const data =  fs.readFileSync(path);
+  const info = ttfInfo(data);
+  return data
+    
+}
 
-  getData(pathOrData)
-    .then(data => {
+export  function ttfInfoFromData(data) {
+
       const info = ttfInfo(data);
-      cb(null, info);
-    })
-    .catch(err => {
-      cb(err);
-    });
+      return data
+  
 }
