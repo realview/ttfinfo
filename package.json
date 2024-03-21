@@ -13,6 +13,7 @@
     "name": "Trevor Dixon",
     "email": "trevordixon@gmail.com"
   },
+  "type": "module",
   "license": "MIT",
   "description": "Extracts metadata from a ttf file."
 }
